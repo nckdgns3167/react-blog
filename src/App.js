@@ -1,24 +1,12 @@
 import React from "react";
-import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import BlogForm from "./components/BlogForm";
+import Navbar from "./components/Navbar";
 
 function App() {
   return (
     <Router>
-      <nav className="navbar navbar-dark bg-dark">
-        <div className="container">
-          <Link className="navbar-brand" to="/">
-            Home
-          </Link>
-          <ul className="navbar-nav">
-            <li className="nav-item">
-              <Link className="nav-link active" aria-current="page" to="/blogs">
-                Blogs
-              </Link>
-            </li>
-          </ul>
-        </div>
-      </nav>
+      <Navbar />
       <div className="container">
         <Switch>
           <Route path="/" exact>
