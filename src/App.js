@@ -1,7 +1,11 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import BlogForm from "./components/BlogForm";
 import Navbar from "./components/Navbar";
+
+import CreatePage from "./pages/CreatePage";
+import EditPage from "./pages/EditPage";
+import HomePage from "./pages/HomePage";
+import ListPage from "./pages/ListPage";
 
 function App() {
   return (
@@ -10,10 +14,19 @@ function App() {
       <div className="container">
         <Switch>
           <Route path="/" exact>
-            Home Page
+            <HomePage />
           </Route>
-          <Route path="/blogs">
-            <BlogForm />
+
+          <Route path="/blogs" exact>
+            <ListPage />
+          </Route>
+
+          <Route path="/blogs/create" exact>
+            <CreatePage />
+          </Route>
+
+          <Route path="/blogs/edit" exact>
+            <EditPage />
           </Route>
         </Switch>
       </div>
