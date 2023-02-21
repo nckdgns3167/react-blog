@@ -1,11 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Navbar from "./components/Navbar";
-
-import CreatePage from "./pages/CreatePage";
-import EditPage from "./pages/EditPage";
-import HomePage from "./pages/HomePage";
-import ListPage from "./pages/ListPage";
+import routes from "./routes";
 
 function App() {
   return (
@@ -13,21 +9,16 @@ function App() {
       <Navbar />
       <div className="container">
         <Switch>
-          <Route path="/" exact>
-            <HomePage />
-          </Route>
-
-          <Route path="/blogs" exact>
-            <ListPage />
-          </Route>
-
-          <Route path="/blogs/create" exact>
-            <CreatePage />
-          </Route>
-
-          <Route path="/blogs/edit" exact>
-            <EditPage />
-          </Route>
+          {routes.map((route) => {
+            return (
+              <Route
+                exact
+                key={route.path}
+                path={route.path}
+                component={route.component}
+              />
+            );
+          })}
         </Switch>
       </div>
     </Router>
