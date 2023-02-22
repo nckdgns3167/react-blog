@@ -7,6 +7,7 @@ const Card = ({ title, onClick, children }) => {
       <div className="card-body">
         <div className="d-flex justify-content-between">
           <div>{title}</div>
+          {/* children 유무에 따라 컴포넌트 표시할지 말지 */}
           {children && <div>{children}</div>}
         </div>
       </div>
