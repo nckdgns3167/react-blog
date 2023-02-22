@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Card from "../components/Card";
 
 const ListPage = () => {
   const [posts, setPosts] = useState([]);
@@ -17,7 +18,13 @@ const ListPage = () => {
     <div>
       <h1>Blogs</h1>
       {posts.map((post) => {
-        return <div key={post.id}>{post.title}</div>;
+        return (
+          <Card key={post.id} title={post.title}>
+            <div className="d-flex justify-content-between">
+              <button>button</button>
+            </div>
+          </Card>
+        );
       })}
     </div>
   );
