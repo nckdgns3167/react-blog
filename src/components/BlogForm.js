@@ -1,8 +1,7 @@
 import axios from "axios";
-import { bool } from "prop-types";
+import propTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
-
 const BlogForm = ({ editing }) => {
   const history = useHistory();
   const { id } = useParams();
@@ -120,7 +119,7 @@ const BlogForm = ({ editing }) => {
 };
 
 BlogForm.propTypes = {
-  editing: bool,
+  editing: propTypes.bool,
 };
 
 BlogForm.default = {

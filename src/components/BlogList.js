@@ -1,5 +1,5 @@
 import axios from "axios";
-import { bool } from "prop-types";
+import propTypes from "prop-types";
 import React, { useCallback, useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import Card from "../components/Card";
@@ -16,7 +16,9 @@ const BlogList = ({ isAdmin }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [numberOfPosts, setNumberOfPosts] = useState(0);
   const [numberOfPages, setNumberOfPages] = useState(0);
-  const _limit = 1;
+  const [searchText, setSearchText] = useState("");
+
+  const _limit = 5;
 
   const onClickPageButton = (_page) => {
     history.push(`${location.pathname}?_page=${_page}`);
@@ -25,6 +27,31 @@ const BlogList = ({ isAdmin }) => {
 
   const getPosts = useCallback(
     (_page = 1, _sort = "id", _order = "desc") => {
+      let params = {
+        _page,
+        _limit,
+        _sort,
+        _order,
+        title_like: searchText,
+      };
+
+      if (!isAdmin) params = { ...params, publish: true };
+
+      axios.get("http://localhost:3001/posts", { params }).then((response) => {
+        setNumberOfPosts(Number(response.headers["x-total-count"]));
+        setPosts(response.data);
+        setLoading(false);
+      });
+    },
+    [isAdmin, searchText]
+  );
+
+  useEffect(() => {
+    setNumberOfPages(Math.ceil(numberOfPosts / _limit));
+  }, [numberOfPosts]);
+
+  useEffect(() => {
+    const getPosts = (_page = 1, _sort = "id", _order = "desc") => {
       let params = {
         _page,
         _limit,
@@ -39,18 +66,11 @@ const BlogList = ({ isAdmin }) => {
         setPosts(response.data);
         setLoading(false);
       });
-    },
-    [isAdmin]
-  );
+    };
 
-  useEffect(() => {
-    setNumberOfPages(Math.ceil(numberOfPosts / _limit));
-  }, [numberOfPosts]);
-
-  useEffect(() => {
     setCurrentPage(parseInt(pageParam) || 1);
     getPosts(parseInt(pageParam) || 1);
-  }, [pageParam, getPosts]);
+  }, []);
 
   const deleteBlog = (e, id) => {
     e.stopPropagation();
@@ -60,8 +80,6 @@ const BlogList = ({ isAdmin }) => {
   };
 
   if (loading) return <LoadingSpinner />;
-
-  if (posts.length === 0) return "게시물이 없습니다.";
 
   const renderBlogList = () => {
     return (
@@ -90,22 +108,43 @@ const BlogList = ({ isAdmin }) => {
     );
   };
 
+  const onSearch = (e) => {
+    if (e.key === "enter") {
+      getPosts(1);
+    }
+  };
+
   return (
     <div>
-      {renderBlogList()}
-      {numberOfPages > 1 && (
-        <Pagination
-          currentPage={currentPage}
-          numberOfPages={numberOfPages}
-          getPosts={onClickPageButton}
-        />
+      <input
+        className="form-control"
+        type="text"
+        placeholder="Search..."
+        value={searchText}
+        onChange={(e) => setSearchText(e.target.value)}
+        onKeyUp={onSearch}
+      />
+      <hr />
+      {posts.length === 0 ? (
+        "게시물이 없습니다."
+      ) : (
+        <>
+          {renderBlogList()}
+          {numberOfPages > 1 && (
+            <Pagination
+              currentPage={currentPage}
+              numberOfPages={numberOfPages}
+              getPosts={onClickPageButton}
+            />
+          )}
+        </>
       )}
     </div>
   );
 };
 
 BlogList.propTypes = {
-  isAdmin: bool,
+  isAdmin: propTypes.bool,
 };
 
 BlogList.defaultProps = {
