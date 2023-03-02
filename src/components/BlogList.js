@@ -22,6 +22,7 @@ const BlogList = ({ isAdmin }) => {
 
   const onClickPageButton = (_page) => {
     history.push(`${location.pathname}?_page=${_page}`);
+    setCurrentPage(_page);
     getPosts(_page);
   };
 
@@ -110,6 +111,7 @@ const BlogList = ({ isAdmin }) => {
 
   const onSearch = (e) => {
     if (e.key === "enter") {
+      setCurrentPage(1);
       getPosts(1);
     }
   };
