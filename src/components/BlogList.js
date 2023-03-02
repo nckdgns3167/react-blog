@@ -52,23 +52,6 @@ const BlogList = ({ isAdmin }) => {
   }, [numberOfPosts]);
 
   useEffect(() => {
-    const getPosts = (_page = 1, _sort = "id", _order = "desc") => {
-      let params = {
-        _page,
-        _limit,
-        _sort,
-        _order,
-      };
-
-      if (!isAdmin) params = { ...params, publish: true };
-
-      axios.get("http://localhost:3001/posts", { params }).then((response) => {
-        setNumberOfPosts(Number(response.headers["x-total-count"]));
-        setPosts(response.data);
-        setLoading(false);
-      });
-    };
-
     setCurrentPage(parseInt(pageParam) || 1);
     getPosts(parseInt(pageParam) || 1);
   }, []);
@@ -110,7 +93,8 @@ const BlogList = ({ isAdmin }) => {
   };
 
   const onSearch = (e) => {
-    if (e.key === "enter") {
+    if (e.key === "Enter") {
+      history.push(`${location.pathname}?_page=1`);
       setCurrentPage(1);
       getPosts(1);
     }
@@ -136,7 +120,7 @@ const BlogList = ({ isAdmin }) => {
             <Pagination
               currentPage={currentPage}
               numberOfPages={numberOfPages}
-              getPosts={onClickPageButton}
+              onClick={onClickPageButton}
             />
           )}
         </>

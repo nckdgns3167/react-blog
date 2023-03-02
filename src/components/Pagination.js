@@ -1,7 +1,7 @@
 import React from "react";
 import propTypes from "prop-types";
 
-const Pagination = ({ currentPage, numberOfPages, getPosts, limit }) => {
+const Pagination = ({ currentPage, numberOfPages, onClick, limit }) => {
   const currentSet = Math.ceil(currentPage / limit);
   const lastSet = Math.ceil(numberOfPages / limit);
   const startPage = limit * (currentSet - 1) + 1;
@@ -13,7 +13,7 @@ const Pagination = ({ currentPage, numberOfPages, getPosts, limit }) => {
         {currentSet !== 1 && (
           <li
             className="page-item cursor-pointer"
-            onClick={() => getPosts(startPage - limit)}
+            onClick={() => onClick(startPage - limit)}
           >
             <div className="page-link">Previous</div>
           </li>
@@ -31,7 +31,7 @@ const Pagination = ({ currentPage, numberOfPages, getPosts, limit }) => {
               >
                 <div
                   className="page-link cursor-pointer"
-                  onClick={() => getPosts(pageNumber)}
+                  onClick={() => onClick(pageNumber)}
                 >
                   {pageNumber}
                 </div>
@@ -41,7 +41,7 @@ const Pagination = ({ currentPage, numberOfPages, getPosts, limit }) => {
         {currentSet !== lastSet && (
           <li
             className="page-item cursor-pointer"
-            onClick={() => getPosts(startPage + limit)}
+            onClick={() => onClick(startPage + limit)}
           >
             <div className="page-link">Next</div>
           </li>
@@ -54,7 +54,7 @@ const Pagination = ({ currentPage, numberOfPages, getPosts, limit }) => {
 Pagination.propTypes = {
   currentPage: propTypes.number,
   numberOfPages: propTypes.number.isRequired,
-  getPosts: propTypes.func.isRequired,
+  onClick: propTypes.func.isRequired,
   limit: propTypes.number,
 };
 
