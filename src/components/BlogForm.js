@@ -12,6 +12,9 @@ const BlogForm = ({ editing }) => {
   const [body, setBody] = useState("");
   const [publish, setPublish] = useState(false);
 
+  const [titleError, setTitleError] = useState(false);
+  const [bodyError, setBodyError] = useState(false);
+
   useEffect(() => {
     if (editing) {
       axios.get(`http://localhost:3001/posts/${id}`).then((res) => {
@@ -32,30 +35,48 @@ const BlogForm = ({ editing }) => {
     );
   };
 
+  const validateForm = () => {
+    let validated = true;
+    if (title === "") {
+      setTitleError(true);
+      validated = false;
+    }
+
+    if (body === "") {
+      setBodyError(true);
+      validated = false;
+    }
+    return validated;
+  };
+
   const onSubmit = () => {
-    if (editing) {
-      axios
-        .patch(`http://localhost:3001/posts/${id}`, {
-          title,
-          body,
-          publish,
-        })
-        .then((res) => {
-          // setOriginTitle(res.data.title);
-          // setOriginBody(res.data.body);
-          history.push(`/blogs/${id}`);
-        });
-    } else {
-      axios
-        .post("http://localhost:3001/posts", {
-          title,
-          body,
-          publish,
-          createAt: Date.now(),
-        })
-        .then(() => {
-          history.push("/admin");
-        });
+    setTitleError(false);
+    setBodyError(false);
+    if (validateForm()) {
+      if (editing) {
+        axios
+          .patch(`http://localhost:3001/posts/${id}`, {
+            title,
+            body,
+            publish,
+          })
+          .then((res) => {
+            // setOriginTitle(res.data.title);
+            // setOriginBody(res.data.body);
+            history.push(`/blogs/${id}`);
+          });
+      } else {
+        axios
+          .post("http://localhost:3001/posts", {
+            title,
+            body,
+            publish,
+            createAt: Date.now(),
+          })
+          .then(() => {
+            history.push("/admin");
+          });
+      }
     }
   };
 
@@ -77,23 +98,25 @@ const BlogForm = ({ editing }) => {
       <div className="mb-2">
         <label className="form-label">Title</label>
         <input
-          className="form-control"
+          className={`form-control ${titleError ? "border-danger" : ""}`}
           value={title}
           onChange={(e) => {
             setTitle(e.target.value);
           }}
         />
+        {titleError && <div className="text-danger">Title is isRequired.</div>}
       </div>
       <div className="mb-2">
         <label className="form-label">Body</label>
         <textarea
-          className="form-control"
+          className={`form-control ${bodyError ? "border-danger" : ""}`}
           value={body}
           onChange={(e) => {
             setBody(e.target.value);
           }}
           rows="10"
         />
+        {bodyError && <div className="text-danger">Body is isRequired.</div>}
       </div>
       <div className="form-check mb-2">
         <input
